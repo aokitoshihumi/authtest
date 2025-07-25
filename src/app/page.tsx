@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { auth, db } from "../lib/firebase";
 import { Todo } from "@/types";
-import TodoList from "./components/TodoList";
+import TodoList from "@/components/TodoList";
 import { v4 as uuid } from "uuid";
 import { addDoc, collection,getDocs } from "firebase/firestore";
 

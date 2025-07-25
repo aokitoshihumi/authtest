@@ -2,63 +2,67 @@
 
 import React, { useState } from "react";
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 import { useRouter } from "next/navigation";
+import { LoginContainer, LoginForm } from "@/styles/styles";
+import { Button, Card, TextField } from "@mui/material";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  const handleSignup = async () => {
+  const handleSignIn = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("success");
-    } catch {
-      alert("エラー");
-    }
-  };
-
-  const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("../");
-    } catch {
-      alert("エラー");
+      const useCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      //非同期のルーティング
+      router.push("/dashboard");
+    } catch (error) {
+      setErrorMessage("Eメールまたはパスワードが間違っています。");
     }
   };
 
   return (
-    <div className="p-4">
-      <input
-        type="email"
-        placeholder="メールアドレス"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 mb-2 block w-full"
-      />
-      <input
-        type="password"
-        placeholder="パスワード"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 mb-2 block w-full"
-      />
-      <button
-        className="bg-blue-500 cursor-pointer text-white px-4 py-2 mr-2"
-        onClick={handleSignup}
-      >
-        登録
-      </button>
-      <button
-        className="bg-green-500 cursor-pointer text-white px-4 py-2"
-        onClick={handleLogin}
-      >
-        ログイン
-      </button>
-    </div>
+    <>
+      <LoginContainer>
+        <Card sx={LoginForm}>
+          <header className="text-3xl mt-5">Sign in</header>
+          <h1 className="m-4">Pleace sigin in to continue.</h1>
+          <TextField
+            type="text"
+            sx={{ marginBottom: "5px" }}
+            label="Eメールを入力"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            type="text"
+            sx={{ marginBottom: "50px" }}
+            label="パスワードを入力"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          { errorMessage && (
+            <h1 className="text-red-500">
+              {errorMessage}
+            </h1>
+          )}
+          <Button onClick={handleSignIn}>入力確定</Button>
+          <Button>
+            <Link href="/signup">新規登録</Link>
+          </Button>
+        </Card>
+      </LoginContainer>
+    </>
   );
 }
