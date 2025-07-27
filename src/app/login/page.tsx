@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { LoginContainer, LoginForm } from "@/styles/styles";
@@ -11,18 +9,14 @@ import { Button, Card, TextField } from "@mui/material";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
 
   const handleSignIn = async () => {
     try {
-      const useCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      await signInWithEmailAndPassword(auth, email, password);
       //非同期のルーティング
       router.push("/dashboard");
     } catch (error) {
@@ -34,8 +28,8 @@ export default function LoginPage() {
     <>
       <LoginContainer>
         <Card sx={LoginForm}>
-          <header className="text-3xl mt-5">Sign in</header>
-          <h1 className="m-4">Pleace sigin in to continue.</h1>
+          <header className="text-3xl mt-5">ログイン</header>
+          <h1 className="m-4">フォームに入力してください</h1>
           <TextField
             type="text"
             sx={{ marginBottom: "5px" }}
@@ -52,11 +46,7 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          { errorMessage && (
-            <h1 className="text-red-500">
-              {errorMessage}
-            </h1>
-          )}
+          {errorMessage && <h1 className="text-red-500">{errorMessage}</h1>}
           <Button onClick={handleSignIn}>入力確定</Button>
           <Button>
             <Link href="/signup">新規登録</Link>
